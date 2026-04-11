@@ -18,7 +18,7 @@ export function Header() {
           <Link to="/book" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" activeProps={{ className: "text-sm font-medium text-foreground" }}>
             Book
           </Link>
-          <Link to="/packages" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" activeProps={{ className: "text-sm font-medium text-foreground" }}>
+          <Link to="/packages" search={{}} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" activeProps={{ className: "text-sm font-medium text-foreground" }}>
             Packages
           </Link>
           <Link to="/orders" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground" activeProps={{ className: "text-sm font-medium text-foreground" }}>
@@ -41,7 +41,7 @@ export function Header() {
         <div className="border-t bg-background px-4 py-4 md:hidden">
           <nav className="flex flex-col gap-3">
             <Link to="/book" className="text-sm font-medium" onClick={() => setMobileOpen(false)}>Book</Link>
-            <Link to="/packages" className="text-sm font-medium" onClick={() => setMobileOpen(false)}>Packages</Link>
+            <Link to="/packages" search={{}} className="text-sm font-medium" onClick={() => setMobileOpen(false)}>Packages</Link>
             <Link to="/orders" className="text-sm font-medium" onClick={() => setMobileOpen(false)}>Orders</Link>
             <Link to="/profile" className="text-sm font-medium" onClick={() => setMobileOpen(false)}>Profile</Link>
             <Link to="/login" onClick={() => setMobileOpen(false)}>

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/packages/$id")({
   notFoundComponent: () => (
     <div className="py-20 text-center">
       <p className="text-lg font-medium">Package not found</p>
-      <Link to="/packages" className="mt-2 text-primary hover:underline">Browse all packages</Link>
+    <Link to="/packages" search={{}} className="mt-2 text-primary hover:underline">Browse all packages</Link>
     </div>
   ),
 });
@@ -41,7 +41,7 @@ function PackageDetailPage() {
     return (
       <div className="py-20 text-center">
         <p className="text-lg font-medium">Package not found</p>
-        <Link to="/packages" className="mt-2 text-primary hover:underline">Browse all packages</Link>
+        <Link to="/packages" search={{}} className="mt-2 text-primary hover:underline">Browse all packages</Link>
       </div>
     );
   }
@@ -61,7 +61,7 @@ function PackageDetailPage() {
   return (
     <div className="py-12 md:py-20">
       <div className="mx-auto max-w-5xl px-4">
-        <Link to="/packages" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <Link to="/packages" search={{}} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Back to packages
         </Link>
 

@@ -68,7 +68,7 @@ function PackagesPage() {
             {filtered.map((pkg) => {
               const dest = destinations.find((d) => d.id === pkg.destinationId);
               return (
-                <Link key={pkg.id} to="/packages/$id" params={{ id: pkg.id }} className="group">
+                <Link key={pkg.id} to="/packages/$id" params={{ id: pkg.id }} search={{}} className="group">
                   <Card className="overflow-hidden transition-all hover:shadow-lg">
                     <div className="aspect-[3/2] overflow-hidden bg-muted">
                       <img

@@ -30,7 +30,7 @@ function HomePage() {
                   Plan Your Wardrobe <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link to="/packages">
+              <Link to="/packages" search={{}}>
                 <Button variant="outline" size="lg" className="text-base">
                   Browse Packages
                 </Button>

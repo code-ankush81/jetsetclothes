@@ -34,7 +34,7 @@ function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [done, setDone] = useState(false);
 
-  const rentalTotal = pkg ? pkg.pricePerDay * days : 0;
+  const rentalTotal = pkg ? pkg.pricePerDay * (days ?? 7) : 0;
   const total = pkg ? rentalTotal + pkg.deposit : 0;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -50,8 +50,8 @@ function CheckoutPage() {
     return (
       <div className="flex min-h-[70vh] items-center justify-center px-4">
         <div className="max-w-md text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-            <CheckCircle className="h-8 w-8 text-green-600" />
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <CheckCircle className="h-8 w-8 text-primary" />
           </div>
           <h1 className="font-display text-2xl font-bold text-foreground">Order Confirmed!</h1>
           <p className="mt-2 text-muted-foreground">
