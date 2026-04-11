@@ -14,8 +14,8 @@ export const Route = createFileRoute("/packages")({
     ],
   }),
   validateSearch: (search: Record<string, unknown>) => ({
-    dest: (search.dest as string) || "",
-    purpose: (search.purpose as string) || "",
+    dest: (search.dest as string) || undefined,
+    purpose: (search.purpose as string) || undefined,
   }),
   component: PackagesPage,
 });

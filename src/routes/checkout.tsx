@@ -15,9 +15,9 @@ export const Route = createFileRoute("/checkout")({
     ],
   }),
   validateSearch: (search: Record<string, unknown>) => ({
-    packageId: (search.packageId as string) || "",
-    days: Number(search.days) || 7,
-    items: (search.items as string) || "",
+    packageId: (search.packageId as string) || undefined,
+    days: Number(search.days) || undefined,
+    items: (search.items as string) || undefined,
   }),
   component: CheckoutPage,
 });
