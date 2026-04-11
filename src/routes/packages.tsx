@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { packages, destinations } from "@/lib/mock-data";
+import { useApp } from "@/lib/app-context";
 import { Package, Filter } from "lucide-react";
 
 export const Route = createFileRoute("/packages")({
@@ -13,15 +14,14 @@ export const Route = createFileRoute("/packages")({
       { name: "description", content: "Browse curated clothing packages for your travel destination." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    dest: (search.dest as string) || undefined,
-    purpose: (search.purpose as string) || undefined,
-  }),
   component: PackagesPage,
 });
 
 function PackagesPage() {
-  const { dest, purpose } = Route.useSearch();
+  const { trip } = useApp();
+  const dest = trip?.destination || "";
+  const purpose = trip?.purpose || "";
+
   const [styleFilter, setStyleFilter] = useState<string>(
     purpose === "business" ? "business" : purpose === "adventure" ? "outdoor" : ""
   );
@@ -68,15 +68,10 @@ function PackagesPage() {
             {filtered.map((pkg) => {
               const dest = destinations.find((d) => d.id === pkg.destinationId);
               return (
-                <Link key={pkg.id} to="/packages/$id" params={{ id: pkg.id }} search={{}} className="group">
+                <Link key={pkg.id} to="/packages/$id" params={{ id: pkg.id }} className="group">
                   <Card className="overflow-hidden transition-all hover:shadow-lg">
                     <div className="aspect-[3/2] overflow-hidden bg-muted">
-                      <img
-                        src={pkg.image}
-                        alt={pkg.name}
-                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                        loading="lazy"
-                      />
+                      <img src={pkg.image} alt={pkg.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" loading="lazy" />
                     </div>
                     <CardContent className="p-5">
                       <div className="mb-2 flex items-center gap-2">

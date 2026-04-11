@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { packages, destinations } from "@/lib/mock-data";
+import { useApp } from "@/lib/app-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/packages/$id")({
   notFoundComponent: () => (
     <div className="py-20 text-center">
       <p className="text-lg font-medium">Package not found</p>
-    <Link to="/packages" search={{}} className="mt-2 text-primary hover:underline">Browse all packages</Link>
+      <Link to="/packages" className="mt-2 text-primary hover:underline">Browse all packages</Link>
     </div>
   ),
 });
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/packages/$id")({
 function PackageDetailPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const { setCart } = useApp();
   const pkg = packages.find((p) => p.id === id);
 
   const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>(
@@ -41,7 +43,7 @@ function PackageDetailPage() {
     return (
       <div className="py-20 text-center">
         <p className="text-lg font-medium">Package not found</p>
-        <Link to="/packages" search={{}} className="mt-2 text-primary hover:underline">Browse all packages</Link>
+        <Link to="/packages" className="mt-2 text-primary hover:underline">Browse all packages</Link>
       </div>
     );
   }
@@ -52,16 +54,18 @@ function PackageDetailPage() {
   const grandTotal = rentalTotal + pkg.deposit;
 
   const handleCheckout = () => {
-    navigate({
-      to: "/checkout",
-      search: { packageId: pkg.id, days, items: Object.keys(selectedItems).filter((k) => selectedItems[k]).join(",") },
+    setCart({
+      packageId: pkg.id,
+      days,
+      items: Object.keys(selectedItems).filter((k) => selectedItems[k]),
     });
+    navigate({ to: "/checkout" });
   };
 
   return (
     <div className="py-12 md:py-20">
       <div className="mx-auto max-w-5xl px-4">
-        <Link to="/packages" search={{}} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        <Link to="/packages" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Back to packages
         </Link>
 
@@ -89,9 +93,7 @@ function PackageDetailPage() {
                     <CardContent className="flex items-center gap-4 p-4">
                       <Checkbox
                         checked={selectedItems[item.id]}
-                        onCheckedChange={(checked) =>
-                          setSelectedItems((p) => ({ ...p, [item.id]: !!checked }))
-                        }
+                        onCheckedChange={(checked) => setSelectedItems((p) => ({ ...p, [item.id]: !!checked }))}
                       />
                       <div className="flex-1">
                         <p className="font-medium text-foreground">{item.name}</p>
@@ -100,9 +102,7 @@ function PackageDetailPage() {
                       <Select value={sizes[item.id]} onValueChange={(v) => setSizes((p) => ({ ...p, [item.id]: v }))}>
                         <SelectTrigger className="w-20"><SelectValue /></SelectTrigger>
                         <SelectContent>
-                          {item.sizes.map((s) => (
-                            <SelectItem key={s} value={s}>{s}</SelectItem>
-                          ))}
+                          {item.sizes.map((s) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
                         </SelectContent>
                       </Select>
                     </CardContent>
@@ -116,18 +116,13 @@ function PackageDetailPage() {
             <Card className="sticky top-24">
               <CardContent className="p-6">
                 <h3 className="font-display text-lg font-semibold">Order Summary</h3>
-
                 <div className="mt-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Rental days</span>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setDays((d) => Math.max(1, d - 1))}>
-                        <Minus className="h-3 w-3" />
-                      </Button>
+                      <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setDays((d) => Math.max(1, d - 1))}><Minus className="h-3 w-3" /></Button>
                       <span className="w-8 text-center font-medium">{days}</span>
-                      <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setDays((d) => d + 1)}>
-                        <Plus className="h-3 w-3" />
-                      </Button>
+                      <Button variant="outline" size="icon" className="h-7 w-7" onClick={() => setDays((d) => d + 1)}><Plus className="h-3 w-3" /></Button>
                     </div>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -143,7 +138,6 @@ function PackageDetailPage() {
                     <span>${pkg.deposit}</span>
                   </div>
                 </div>
-
                 <div className="mt-4 border-t pt-4">
                   <div className="flex justify-between font-semibold">
                     <span>Total</span>
@@ -151,7 +145,6 @@ function PackageDetailPage() {
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">Deposit of ${pkg.deposit} refunded on return</p>
                 </div>
-
                 <Button size="lg" className="mt-6 w-full gap-2" onClick={handleCheckout} disabled={activeItemCount === 0}>
                   <ShoppingBag className="h-5 w-5" /> Proceed to Checkout
                 </Button>

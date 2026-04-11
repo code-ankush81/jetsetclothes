@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { packages } from "@/lib/mock-data";
+import { useApp } from "@/lib/app-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,18 +15,15 @@ export const Route = createFileRoute("/checkout")({
       { name: "description", content: "Complete your clothing rental order." },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    packageId: (search.packageId as string) || undefined,
-    days: Number(search.days) || undefined,
-    items: (search.items as string) || undefined,
-  }),
   component: CheckoutPage,
 });
 
 function CheckoutPage() {
   const navigate = useNavigate();
-  const { packageId, days } = Route.useSearch();
-  const pkg = packages.find((p) => p.id === packageId);
+  const { cart } = useApp();
+  const pkg = cart ? packages.find((p) => p.id === cart.packageId) : null;
+  const days = cart?.days ?? 7;
+
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -34,7 +32,7 @@ function CheckoutPage() {
   const [processing, setProcessing] = useState(false);
   const [done, setDone] = useState(false);
 
-  const rentalTotal = pkg ? pkg.pricePerDay * (days ?? 7) : 0;
+  const rentalTotal = pkg ? pkg.pricePerDay * days : 0;
   const total = pkg ? rentalTotal + pkg.deposit : 0;
 
   const handleSubmit = (e: React.FormEvent) => {
